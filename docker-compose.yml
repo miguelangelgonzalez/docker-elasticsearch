@@ -7,9 +7,15 @@ services:
       UNICAST_HOSTS: master
       MIN_MASTERS: 1
     deploy:
+      placement:
+        constraints: 
+          - node.role == manager
       replicas: 1
       update_config:
         parallelism: 1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
   data:
     image: itzg/elasticsearch
     environment:
@@ -17,24 +23,21 @@ services:
       UNICAST_HOSTS: master
       ES_JAVA_OPTS: "-Xms4g -Xmx4g"
     deploy:
-      replicas: 2
+      replicas: 1
       placement:
         constraints: 
           - node.labels.db == elasticsearch
       update_config:
         parallelism: 1
         delay: 60s
-  gateway:
-    image: itzg/elasticsearch
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      TYPE: GATEWAY
-      UNICAST_HOSTS: master
   kibana:
     image: kibana
     ports:
       - "5601:5601"
     environment:
-      ELASTICSEARCH_URL: http://gateway:9200
+      ELASTICSEARCH_URL: http://master:9200
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
+      
