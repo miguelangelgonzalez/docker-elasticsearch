@@ -19,7 +19,7 @@ services:
     deploy:
       replicas: 2
       placement:
-        constraints: [node.labels.db == elasticsearch]
+        constraints: node.labels.db == elasticsearch
       update_config:
         parallelism: 1
         delay: 60s
