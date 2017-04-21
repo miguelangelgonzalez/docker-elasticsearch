@@ -21,8 +21,8 @@ services:
       update_config:
         parallelism: 1
         delay: 60s
-        placement:
-            constraints: [node.labels.db == elasticsearch]
+      placement:
+        constraints:[node.labels.db == elasticsearch]
   gateway:
     image: itzg/elasticsearch
     ports:
