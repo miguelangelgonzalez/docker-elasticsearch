@@ -15,14 +15,14 @@ services:
     environment:
       TYPE: DATA
       UNICAST_HOSTS: master
-        ES_JAVA_OPTS:"-Xms4g -Xmx4g"
+      ES_JAVA_OPTS: "-Xms4g -Xmx4g"
     deploy:
       replicas: 2
+      placement:
+        constraints: [node.labels.db == elasticsearch]
       update_config:
         parallelism: 1
         delay: 60s
-      placement:
-        constraints:[node.labels.db == elasticsearch]
   gateway:
     image: itzg/elasticsearch
     ports:
